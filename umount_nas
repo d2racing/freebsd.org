@@ -1,0 +1,11 @@
+#!/bin/sh
+
+MOUNT_POINT="/mnt/NAS"
+
+if mount | grep -q "$MOUNT_POINT"; then
+    echo "Démontage du NAS..."
+    fusermount3 -u "$MOUNT_POINT" || sudo umount "$MOUNT_POINT"
+    echo "NAS démonté."
+else
+    echo "Le NAS n'est pas monté."
+fi
