@@ -1,0 +1,28 @@
+#!bin/bash
+
+sudo pkg install fusefs-smbnetfs
+sudo pkg install samba416
+sudo pkg install iperf3
+sudo kldload fusefs
+echo 'fusefs_load="YES"' | sudo tee -a /boot/loader.conf
+
+nano ~/.nsmbrc
+[192.168.2.250:CS_Backup]
+password=TON_MOT_DE_PASSE
+
+chmod 600 ~/.nsmbrc
+mkdir -p ~/.smbnetfs
+
+nano ~/.smbnetfs/config
+[default]
+username = CS_Backup
+host = 192.168.2.250
+smb_version = 3
+
+chmod 600 ~/.smbnetfs/config
+
+sudo mkdir -p /mnt/NAS
+smbnetfs /mnt/NAS
+ls /mnt/NAS/192.168.2.250
+
+Ceci devrait donner : CLONEZILLA  DIVERS  DONNEES  homes  LOGICIELS  photo  PHOTOSYNC  STORAGE_ANALYZER
