@@ -1,0 +1,46 @@
+#!/bin/sh
+# =============================================
+# Script d'installation de KDE Plasma sur FreeBSD 15.0
+# Pour un système post-installation avec réseau fonctionnel
+# Matériel : AMD Ryzen 5 7520U + GPU intégré Radeon 610M
+# =============================================
+
+# --- METTRE À JOUR LE SYSTÈME ---
+echo "[1/6] Mise à jour des ports/packages..."
+sudo freebsd-update fetch install
+sudo pkg update
+sudo pkg upgrade -y
+
+# --- INSTALLATION DE KDE PLASMA ET UTILITAIRES ---
+echo "[2/6] Installation de KDE Plasma et utilitaires..."
+sudo pkg install -y xorg kde5 kde-applications sddm
+
+# --- CONFIGURATION DU DRIVER AMD ---
+echo "[3/6] Configuration du driver AMD..."
+# Activer DRM pour AMD
+sudo sysrc kld_list+="amdgpu"
+# Optionnel : activer modesetting si nécessaire
+# echo 'hw.vga.textmode=1' >> /boot/loader.conf
+
+# --- ACTIVER LES SERVICES KDE ---
+echo "[4/6] Activation des services nécessaires..."
+sudo sysrc dbus_enable="YES"
+sudo sysrc sddm_enable="YES"
+sudo sysrc hald_enable="YES"  # pour la gestion des périphériques (claviers, souris, etc.)
+
+# --- CONFIGURATION DU SDDM ---
+echo "[5/6] Configuration de SDDM pour KDE..."
+sudo sysrc sddm_enable="YES"
+# SDDM démarre automatiquement, pas besoin d'auto-login par défaut
+# Si tu veux auto-login :
+# sudo sh -c 'echo "[Autologin]\nUser=ton_user\nSession=plasma.desktop" >> /usr/local/etc/sddm.conf'
+
+# --- LANCEMENT DU SYSTÈME GRAPHIQUE ---
+echo "[6/6] Vérification Xorg et démarrage KDE..."
+sudo service dbus start
+sudo service sddm start
+
+echo "============================================"
+echo "Installation terminée !"
+echo "Redémarre le système pour utiliser KDE Plasma."
+echo "============================================"
