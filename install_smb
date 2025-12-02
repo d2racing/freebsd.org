@@ -1,26 +1,50 @@
-#!bin/bash
+#!/bin/sh
+### ---- EDIT THESE VARIABLES ---- ###
+NAS_IP="192.168.2.250"
+SHARE_NAME="CS_Backup"
+USERNAME="CS_Backup"
+PASSWORD="TON_MOT_DE_PASSE"
+MOUNT_POINT="/mnt/NAS"
+######################################
 
-sudo pkg install -y fusefs-smbnetfs samba416sudo iperf3
-sudo kldload fusefs
-sudo echo 'fusefs_load="YES"' | sudo tee -a /boot/loader.conf
+echo "[*] Installing required packages..."
+pkg install -y fusefs-smbnetfs samba416 iperf3
 
-nano ~/.nsmbrc
-[192.168.2.250:CS_Backup]
-password=TON_MOT_DE_PASSE
+echo "[*] Loading FUSE kernel module..."
+kldload fusefs
+
+echo "[*] Enabling FUSE at boot..."
+grep -q 'fusefs_load="YES"' /boot/loader.conf || \
+    echo 'fusefs_load="YES"' | tee -a /boot/loader.conf
+
+echo "[*] Creating ~/.nsmbrc..."
+cat > ~/.nsmbrc <<EOF
+[${NAS_IP}:${SHARE_NAME}]
+password=${PASSWORD}
+EOF
 
 chmod 600 ~/.nsmbrc
+
+echo "[*] Creating ~/.smbnetfs directory..."
 mkdir -p ~/.smbnetfs
 
-nano ~/.smbnetfs/config
+echo "[*] Creating ~/.smbnetfs/config..."
+cat > ~/.smbnetfs/config <<EOF
 [default]
-username = CS_Backup
-host = 192.168.2.250
+username = ${USERNAME}
+host = ${NAS_IP}
 smb_version = 3
+EOF
 
 chmod 600 ~/.smbnetfs/config
 
-sudo mkdir -p /mnt/NAS
-smbnetfs /mnt/NAS
-ls /mnt/NAS/192.168.2.250
+echo "[*] Creating mount point ${MOUNT_POINT}..."
+mkdir -p "$MOUNT_POINT"
 
-Ceci devrait donner : CLONEZILLA  DIVERS  DONNEES  homes  LOGICIELS  photo  PHOTOSYNC  STORAGE_ANALYZER
+echo "[*] Mounting SMBNetFS..."
+smbnetfs "$MOUNT_POINT"
+
+echo "[*] Listing share contents..."
+ls "${MOUNT_POINT}/${NAS_IP}"
+
+echo "[✓] Setup complete!"
