@@ -70,5 +70,5 @@ echo "[*] Enabling wheel group in sudoers..."
 # Uncomment the wheel line if it exists
 sed -i '' 's/^# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /usr/local/etc/sudoers
 echo "[✓] Done. User '$USER_TO_ADD' should now be able to use sudo."
-
 echo "Fin du script KDE_Install"
+
