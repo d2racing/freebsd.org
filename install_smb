@@ -1,10 +1,8 @@
 #!bin/bash
 
-sudo pkg install fusefs-smbnetfs
-sudo pkg install samba416
-sudo pkg install iperf3
+sudo pkg install -y fusefs-smbnetfs samba416sudo iperf3
 sudo kldload fusefs
-echo 'fusefs_load="YES"' | sudo tee -a /boot/loader.conf
+sudo echo 'fusefs_load="YES"' | sudo tee -a /boot/loader.conf
 
 nano ~/.nsmbrc
 [192.168.2.250:CS_Backup]
