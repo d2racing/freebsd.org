@@ -57,3 +57,18 @@ echo "============================================"
 echo "Installation ultra-automatique de KDE Plasma terminée !"
 echo "Redémarre le système pour profiter de KDE avec login automatique."
 echo "============================================"
+
+# --- 10. Installation de Sudo ---
+echo "[10/10] Installation de Sudo"
+USER_TO_ADD="sylvain"
+pkg install -y sudo
+
+echo "[*] Adding $USER_TO_ADD to wheel group..."
+pw groupmod wheel -m "$USER_TO_ADD"
+
+echo "[*] Enabling wheel group in sudoers..."
+# Uncomment the wheel line if it exists
+sed -i '' 's/^# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /usr/local/etc/sudoers
+echo "[✓] Done. User '$USER_TO_ADD' should now be able to use sudo."
+
+echo "Fin du script KDE_Install"
