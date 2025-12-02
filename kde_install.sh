@@ -6,21 +6,21 @@
 # =========================================================
 
 # --- 1. MISE À JOUR DU SYSTÈME ---
-echo "[1/9] Mise à jour du système..."
+echo "[1/10] Mise à jour du système..."
 freebsd-update fetch install
 pkg update
 pkg upgrade -y
 
 # --- 2. INSTALLATION DE XORG ET KDE PLASMA COMPLET ---
-echo "[2/9] Installation de Xorg et KDE Plasma complet..."
+echo "[2/10] Installation de Xorg et KDE Plasma complet..."
 pkg install -y xorg kde sddm
 
 # --- 3. INSTALLATION DES FONTS ESSENTIELLES ---
-echo "[3/9] Installation des polices..."
+echo "[3/10] Installation des polices..."
 sudo pkg install -y x11-fonts/ttf-dejavu x11-fonts/ttf-liberation x11-fonts/noto
 
 # --- 4. INSTALLATION DES CODECS AUDIO / VIDEO ---
-echo "[4/9] Installation des codecs audio/vidéo..."
+echo "[4/10] Installation des codecs audio/vidéo..."
 pkg install -y multimedia/ffmpeg \
     multimedia/gstreamer1-plugins-good \
     multimedia/gstreamer1-plugins-bad \
@@ -28,28 +28,28 @@ pkg install -y multimedia/ffmpeg \
     multimedia/vlc
 
 # --- 5. CONFIGURATION DU DRIVER AMD ---
-echo "[5/9] Configuration du driver AMD..."
+echo "[5/10] Configuration du driver AMD..."
 pkg install -y drm-kmod
 sysrc kld_list+="amdgpu"
 
 # --- 6. ACTIVATION DES SERVICES NECESSAIRES ---
-echo "[6/9] Activation des services..."
+echo "[6/10] Activation des services..."
 sysrc dbus_enable="YES"
 sysrc sddm_enable="YES"
 sysrc hald_enable="YES"
 
 # --- 7. CONFIGURATION DU LOGIN AUTOMATIQUE SDDM ---
 USER=$(whoami)
-echo "[7/9] Configuration du login automatique pour l'utilisateur $USER..."
+echo "[7/10] Configuration du login automatique pour l'utilisateur $USER..."
 mkdir -p /usr/local/etc/sddm.conf.d
 sh -c "echo '[Autologin]\nUser=$USER\nSession=plasma.desktop' > /usr/local/etc/sddm.conf.d/autologin.conf"
 
 # --- 8. INSTALLATION DES THEMES ET FONDS D'ÉCRAN KDE ---
-echo "[8/9] Installation des thèmes et fonds d'écran KDE..."
+echo "[8/10] Installation des thèmes et fonds d'écran KDE..."
 pkg install -y kde5-lookandfeel kde5-color-schemes kde5-wallpapers
 
 # --- 9. DÉMARRAGE DES SERVICES ---
-echo "[9/9] Démarrage des services KDE..."
+echo "[9/10] Démarrage des services KDE..."
 sudo service dbus start
 sudo service sddm start
 
