@@ -21,4 +21,4 @@ sleep 1
 
 echo ""
 echo "NAS monté. Partages disponibles :"
-ls "$MOUNT_POINT/192.168.2.250"
+ls "$MOUNT_POINT/XXX.XXX.XXX.XXX"
